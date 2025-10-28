@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
-import { Plus, Edit2, Trash2, X } from 'lucide-react';
+import { Plus, Edit2, Trash2, X, Coffee, Utensils, Sun, Moon } from 'lucide-react';
+import { addAllSouthIndianItems } from '../add_menu_items';
 
 interface MenuItem {
   id: string;
@@ -21,6 +22,7 @@ export const MenuManagement: React.FC = () => {
     category: 'appetizer',
   });
   const [message, setMessage] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     fetchMenuItems();
@@ -32,6 +34,24 @@ export const MenuManagement: React.FC = () => {
       .select('*')
       .order('category', { ascending: true });
     if (data) setMenuItems(data);
+  };
+
+  const addSouthIndianMenuItems = async () => {
+    if (window.confirm('Are you sure you want to add all South Indian menu items? This will add 40 new items to your menu.')) {
+      setIsLoading(true);
+      setMessage('');
+      
+      try {
+        await addAllSouthIndianItems();
+        setMessage('Successfully added all South Indian menu items!');
+        fetchMenuItems(); // Refresh the menu items
+      } catch (error) {
+        console.error('Error adding South Indian items:', error);
+        setMessage('Error adding South Indian menu items. Please try again.');
+      } finally {
+        setIsLoading(false);
+      }
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -107,15 +127,31 @@ export const MenuManagement: React.FC = () => {
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-6">
+      <div className="flex flex-col md:flex-row items-center justify-between mb-6 gap-4">
         <h2 className="text-2xl font-bold text-slate-800">Menu Management</h2>
-        <button
-          onClick={() => setShowModal(true)}
-          className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-slate-500 to-blue-600 text-white rounded-lg hover:from-slate-600 hover:to-blue-700 transition"
-        >
-          <Plus className="w-5 h-5" />
-          Add Dish
-        </button>
+        <div className="flex flex-wrap gap-3">
+          <button
+            onClick={addSouthIndianMenuItems}
+            disabled={isLoading}
+            className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-orange-500 to-red-600 text-white rounded-lg hover:from-orange-600 hover:to-red-700 transition disabled:opacity-50"
+          >
+            {isLoading ? (
+              <span>Adding...</span>
+            ) : (
+              <>
+                <Utensils className="w-5 h-5" />
+                Add South Indian Menu
+              </>
+            )}
+          </button>
+          <button
+            onClick={() => setShowModal(true)}
+            className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-slate-500 to-blue-600 text-white rounded-lg hover:from-slate-600 hover:to-blue-700 transition"
+          >
+            <Plus className="w-5 h-5" />
+            Add Dish
+          </button>
+        </div>
       </div>
 
       {message && (
