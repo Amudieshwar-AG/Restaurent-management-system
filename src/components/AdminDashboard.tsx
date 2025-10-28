@@ -136,7 +136,7 @@ export const AdminDashboard: React.FC = () => {
             <div className="flex items-center gap-3">
               <UtensilsCrossed className="w-8 h-8 text-blue-600" />
               <h1 className="text-2xl font-bold bg-gradient-to-r from-slate-600 to-blue-600 bg-clip-text text-transparent">
-                Restaurant Admin
+                Hotel Royal Paradise Admin
               </h1>
             </div>
             <button

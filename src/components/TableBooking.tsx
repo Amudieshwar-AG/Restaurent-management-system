@@ -60,7 +60,7 @@ export const TableBooking: React.FC = () => {
             <h1 className="text-4xl font-bold bg-gradient-to-r from-slate-600 to-blue-600 bg-clip-text text-transparent mb-2">
               Table Booking
             </h1>
-            <p className="text-slate-600">Reserve your table for a memorable dining experience</p>
+            <p className="text-slate-600">Reserve your table at Hotel Royal Paradise for a memorable dining experience</p>
           </div>
 
           {success && (
@@ -165,8 +165,12 @@ export const TableBooking: React.FC = () => {
           </form>
 
           <div className="mt-8 text-center text-sm text-slate-600">
-            <p>For any inquiries, please call us at (555) 123-4567</p>
+            <p>For any inquiries, please call us at (+91) 98765 43210</p>
           </div>
+        </div>
+      </div>
+    </div>
+  );
         </div>
       </div>
     </div>

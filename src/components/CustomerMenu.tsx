@@ -114,7 +114,7 @@ export const CustomerMenu: React.FC = () => {
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <h1 className="text-2xl font-bold bg-gradient-to-r from-slate-600 to-blue-600 bg-clip-text text-transparent">
-              Our Menu
+              Hotel Royal Paradise Menu
             </h1>
             <button
               onClick={() => setShowCart(!showCart)}

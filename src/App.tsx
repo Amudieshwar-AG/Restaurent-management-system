@@ -28,7 +28,7 @@ function AppContent() {
             <div className="flex items-center gap-3">
               <UtensilsCrossed className="w-8 h-8 text-blue-600" />
               <h1 className="text-2xl font-bold bg-gradient-to-r from-slate-600 to-blue-600 bg-clip-text text-transparent">
-                Gourmet Haven
+                Hotel Royal Paradise
               </h1>
             </div>
             <div className="flex gap-2 md:gap-4">
@@ -85,10 +85,10 @@ function AppContent() {
         <div className="container mx-auto px-4 py-16">
           <div className="text-center mb-16">
             <h1 className="text-5xl md:text-7xl font-bold bg-gradient-to-r from-slate-600 to-blue-600 bg-clip-text text-transparent mb-6">
-              Welcome to Gourmet Haven
+              Welcome to Hotel Royal Paradise
             </h1>
             <p className="text-xl md:text-2xl text-slate-700 mb-8 max-w-3xl mx-auto">
-              Experience culinary excellence with our exquisite menu and exceptional service
+              Experience authentic flavors with our exquisite South Indian menu and royal service
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <button
@@ -139,15 +139,15 @@ function AppContent() {
           </div>
 
           <div className="mt-16 bg-white rounded-2xl shadow-xl p-8 max-w-4xl mx-auto">
-            <h2 className="text-3xl font-bold text-slate-800 mb-4 text-center">Our Story</h2>
+            <h2 className="text-3xl font-bold text-slate-800 mb-4 text-center">Our Royal Heritage</h2>
             <p className="text-slate-700 text-lg leading-relaxed mb-4">
-              At Gourmet Haven, we believe that dining is not just about food, but about creating memorable experiences.
-              Our talented chefs combine traditional techniques with modern innovation to bring you dishes that delight
-              all your senses.
+              At Hotel Royal Paradise, we believe that dining is not just about food, but about experiencing the rich 
+              heritage of South Indian cuisine. Our talented chefs combine traditional techniques with modern innovation 
+              to bring you authentic dishes that delight all your senses.
             </p>
             <p className="text-slate-700 text-lg leading-relaxed">
-              Whether you're joining us for a casual lunch, romantic dinner, or special celebration, we're committed
-              to providing exceptional service in an elegant yet comfortable atmosphere.
+              Whether you're joining us for a traditional breakfast, elaborate lunch, or royal dinner, we're committed
+              to providing exceptional service in an elegant yet comfortable atmosphere that reflects our royal heritage.
             </p>
           </div>
         </div>
@@ -161,10 +161,10 @@ function AppContent() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div>
               <h3 className="text-xl font-bold mb-4">Contact Us</h3>
-              <p className="text-slate-300">123 Gourmet Street</p>
-              <p className="text-slate-300">Culinary City, CC 12345</p>
-              <p className="text-slate-300">Phone: (555) 123-4567</p>
-              <p className="text-slate-300">Email: info@gourmethaven.com</p>
+              <p className="text-slate-300">123 Paradise Avenue</p>
+              <p className="text-slate-300">Royal City, RC 54321</p>
+              <p className="text-slate-300">Phone: (+91) 98765 43210</p>
+              <p className="text-slate-300">Email: info@hotelroyalparadise.com</p>
             </div>
             <div>
               <h3 className="text-xl font-bold mb-4">Hours</h3>
@@ -182,7 +182,7 @@ function AppContent() {
             </div>
           </div>
           <div className="border-t border-slate-700 mt-8 pt-8 text-center text-slate-400">
-            <p>&copy; 2024 Gourmet Haven. All rights reserved.</p>
+            <p>&copy; 2024 Hotel Royal Paradise. All rights reserved.</p>
           </div>
         </div>
       </footer>
