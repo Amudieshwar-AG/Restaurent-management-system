@@ -159,7 +159,7 @@ export const AdminDashboard: React.FC = () => {
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-slate-600 text-sm font-medium">Total Revenue</p>
-                    <p className="text-3xl font-bold text-slate-800 mt-2">${totalRevenue.toFixed(2)}</p>
+                    <p className="text-3xl font-bold text-slate-800 mt-2">₹{totalRevenue.toFixed(2)}</p>
                   </div>
                   <DollarSign className="w-12 h-12 text-green-500" />
                 </div>
@@ -195,7 +195,7 @@ export const AdminDashboard: React.FC = () => {
                       <div className="flex justify-between items-start">
                         <div>
                           <p className="font-semibold text-slate-800">{order.customer_name}</p>
-                          <p className="text-sm text-slate-600">${Number(order.total_price).toFixed(2)}</p>
+                          <p className="text-sm text-slate-600">₹{Number(order.total_price).toFixed(2)}</p>
                           <p className="text-xs text-slate-500">{new Date(order.order_time).toLocaleString()}</p>
                         </div>
                         <span className={`px-3 py-1 rounded-full text-xs font-semibold ${
@@ -254,7 +254,7 @@ export const AdminDashboard: React.FC = () => {
                         Items: {order.items_ordered.map((item: any) => `${item.name} (x${item.quantity})`).join(', ')}
                       </p>
                       <p className="text-sm text-slate-500 mt-1">{new Date(order.order_time).toLocaleString()}</p>
-                      <p className="text-lg font-semibold text-blue-600 mt-2">${Number(order.total_price).toFixed(2)}</p>
+                      <p className="text-lg font-semibold text-blue-600 mt-2">₹{Number(order.total_price).toFixed(2)}</p>
                     </div>
                     <div className="flex gap-2">
                       <button

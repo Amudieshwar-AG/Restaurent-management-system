@@ -134,7 +134,7 @@ export const MenuManagement: React.FC = () => {
                 <div key={item.id} className="bg-white rounded-lg shadow-md p-4 hover:shadow-lg transition">
                   <div className="flex justify-between items-start mb-3">
                     <h4 className="font-bold text-lg text-slate-800">{item.name}</h4>
-                    <span className="text-xl font-bold text-blue-600">${Number(item.price).toFixed(2)}</span>
+                    <span className="text-xl font-bold text-blue-600">₹{Number(item.price).toFixed(2)}</span>
                   </div>
                   <p className="text-slate-600 text-sm mb-4 line-clamp-2">{item.description}</p>
                   <div className="flex gap-2">
@@ -194,7 +194,7 @@ export const MenuManagement: React.FC = () => {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-2">Price ($)</label>
+                <label className="block text-sm font-medium text-slate-700 mb-2">Price (₹)</label>
                 <input
                   type="number"
                   step="0.01"
