@@ -169,10 +169,4 @@ export const TableBooking: React.FC = () => {
           </div>
         </div>
       </div>
-    </div>
-  );
-        </div>
-      </div>
-    </div>
-  );
 };
