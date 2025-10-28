@@ -29,11 +29,21 @@ export const MenuManagement: React.FC = () => {
   }, []);
 
   const fetchMenuItems = async () => {
-    const { data } = await supabase
-      .from('menu_items')
-      .select('*')
-      .order('category', { ascending: true });
-    if (data) setMenuItems(data);
+    try {
+      const { data, error } = await supabase
+        .from('menu_items')
+        .select('*')
+        .order('category', { ascending: true });
+
+      if (error) {
+        console.error('Error fetching menu items:', error);
+        return;
+      }
+
+      if (data) setMenuItems(data);
+    } catch (error) {
+      console.error('Error fetching menu items:', error);
+    }
   };
 
   const addSouthIndianMenuItems = async () => {
@@ -170,7 +180,7 @@ export const MenuManagement: React.FC = () => {
                 <div key={item.id} className="bg-white rounded-lg shadow-md p-4 hover:shadow-lg transition">
                   <div className="flex justify-between items-start mb-3">
                     <h4 className="font-bold text-lg text-slate-800">{item.name}</h4>
-                    <span className="text-xl font-bold text-blue-600">₹{Number(item.price).toFixed(2)}</span>
+                    <span className="text-xl font-bold text-blue-600">₹{item.price ? Number(item.price).toFixed(2) : '0.00'}</span>
                   </div>
                   <p className="text-slate-600 text-sm mb-4 line-clamp-2">{item.description}</p>
                   <div className="flex gap-2">

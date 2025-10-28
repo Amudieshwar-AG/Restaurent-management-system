@@ -24,6 +24,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const login = async (username: string, password: string): Promise<boolean> => {
     try {
+      if (!username || !password) {
+        console.error('Username and password are required');
+        return false;
+      }
+
       const { data, error } = await supabase
         .from('admin')
         .select('*')
@@ -31,7 +36,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         .eq('password', password)
         .maybeSingle();
 
-      if (error || !data) {
+      if (error) {
+        console.error('Login error:', error);
+        return false;
+      }
+
+      if (!data) {
+        console.error('Invalid credentials');
         return false;
       }
 

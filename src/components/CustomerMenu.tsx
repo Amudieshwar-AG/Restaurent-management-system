@@ -27,11 +27,21 @@ export const CustomerMenu: React.FC = () => {
   }, []);
 
   const fetchMenuItems = async () => {
-    const { data } = await supabase
-      .from('menu_items')
-      .select('*')
-      .order('category', { ascending: true });
-    if (data) setMenuItems(data);
+    try {
+      const { data, error } = await supabase
+        .from('menu_items')
+        .select('*')
+        .order('category', { ascending: true });
+
+      if (error) {
+        console.error('Error fetching menu items:', error);
+        return;
+      }
+
+      if (data) setMenuItems(data);
+    } catch (error) {
+      console.error('Error fetching menu items:', error);
+    }
   };
 
   const addToCart = (item: MenuItem) => {
@@ -68,7 +78,7 @@ export const CustomerMenu: React.FC = () => {
   };
 
   const handlePlaceOrder = async () => {
-    if (!customerName) {
+    if (!customerName.trim()) {
       alert('Please enter your name');
       return;
     }
@@ -80,7 +90,7 @@ export const CustomerMenu: React.FC = () => {
 
     try {
       const orderData = {
-        customer_name: customerName,
+        customer_name: customerName.trim(),
         items_ordered: cart.map((item) => ({
           id: item.id,
           name: item.name,
@@ -91,7 +101,13 @@ export const CustomerMenu: React.FC = () => {
         status: 'pending',
       };
 
-      await supabase.from('orders').insert([orderData]);
+      const { error } = await supabase.from('orders').insert([orderData]);
+
+      if (error) {
+        console.error('Error placing order:', error);
+        alert('Error placing order: ' + error.message);
+        return;
+      }
 
       setOrderSuccess(true);
       setTimeout(() => {
@@ -101,12 +117,13 @@ export const CustomerMenu: React.FC = () => {
         setShowCart(false);
         setOrderSuccess(false);
       }, 3000);
-    } catch (error) {
-      alert('Error placing order');
+    } catch (error: any) {
+      console.error('Error placing order:', error);
+      alert('Error placing order: ' + (error.message || 'Unknown error'));
     }
   };
 
-  const categories = ['appetizer', 'main course', 'dessert', 'beverage'];
+  const categories = ['breakfast', 'lunch', 'snack', 'dinner', 'appetizer', 'main course', 'dessert', 'beverage'];
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
@@ -149,7 +166,7 @@ export const CustomerMenu: React.FC = () => {
                     <div className="p-6">
                       <div className="flex justify-between items-start mb-3">
                         <h3 className="font-bold text-xl text-slate-800">{item.name}</h3>
-                        <span className="text-2xl font-bold text-blue-600">₹{Number(item.price).toFixed(2)}</span>
+                        <span className="text-2xl font-bold text-blue-600">₹{item.price ? Number(item.price).toFixed(2) : '0.00'}</span>
                       </div>
                       <p className="text-slate-600 mb-4">{item.description}</p>
                       <button
@@ -191,7 +208,7 @@ export const CustomerMenu: React.FC = () => {
                       <div key={item.id} className="flex items-center gap-4 border-b pb-4">
                         <div className="flex-1">
                           <h4 className="font-semibold text-slate-800">{item.name}</h4>
-                          <p className="text-blue-600 font-semibold">₹{Number(item.price).toFixed(2)}</p>
+                          <p className="text-blue-600 font-semibold">₹{item.price ? Number(item.price).toFixed(2) : '0.00'}</p>
                         </div>
                         <div className="flex items-center gap-3">
                           <button
@@ -221,7 +238,7 @@ export const CustomerMenu: React.FC = () => {
                   <div className="border-t pt-4 mb-6">
                     <div className="flex justify-between items-center text-2xl font-bold">
                       <span className="text-slate-800">Total:</span>
-                      <span className="text-blue-600">₹{getTotalPrice().toFixed(2)}</span>
+                      <span className="text-blue-600">₹{Number(getTotalPrice()).toFixed(2)}</span>
                     </div>
                   </div>
 

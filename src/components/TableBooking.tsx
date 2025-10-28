@@ -16,23 +16,30 @@ export const TableBooking: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
+    setSuccess(false);
 
-    if (!formData.customerName || !formData.date || !formData.time || !formData.contact) {
+    if (!formData.customerName.trim() || !formData.date || !formData.time || !formData.contact) {
       setError('Please fill in all fields');
       return;
     }
 
     try {
-      await supabase.from('bookings').insert([
-        {
-          customer_name: formData.customerName,
-          table_no: parseInt(formData.tableNo),
-          booking_date: formData.date,
-          booking_time: formData.time,
-          contact: formData.contact,
-          status: 'confirmed',
-        },
-      ]);
+      const bookingData = {
+        customer_name: formData.customerName.trim(),
+        table_no: parseInt(formData.tableNo),
+        booking_date: formData.date,
+        booking_time: formData.time,
+        contact: formData.contact,
+        status: 'confirmed',
+      };
+
+      const { error } = await supabase.from('bookings').insert([bookingData]);
+
+      if (error) {
+        console.error('Error making reservation:', error);
+        setError('Error making reservation: ' + error.message);
+        return;
+      }
 
       setSuccess(true);
       setFormData({
@@ -44,8 +51,9 @@ export const TableBooking: React.FC = () => {
       });
 
       setTimeout(() => setSuccess(false), 5000);
-    } catch (err) {
-      setError('Error making reservation. Please try again.');
+    } catch (err: any) {
+      console.error('Error making reservation:', err);
+      setError('Error making reservation: ' + (err.message || 'Unknown error'));
     }
   };
 
@@ -169,4 +177,7 @@ export const TableBooking: React.FC = () => {
           </div>
         </div>
       </div>
+    </div>
+  );
+};
 };

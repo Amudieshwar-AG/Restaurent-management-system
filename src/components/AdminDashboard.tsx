@@ -40,23 +40,30 @@ export const AdminDashboard: React.FC = () => {
 
   const fetchData = async () => {
     try {
-      const { data: ordersData } = await supabase
+      const { data: ordersData, error: ordersError } = await supabase
         .from('orders')
         .select('*')
         .order('order_time', { ascending: false });
 
-      const { data: bookingsData } = await supabase
+      const { data: bookingsData, error: bookingsError } = await supabase
         .from('bookings')
         .select('*')
         .order('created_at', { ascending: false });
 
-      if (ordersData) {
+      if (ordersError) {
+        console.error('Error fetching orders:', ordersError);
+      } else if (ordersData) {
         setOrders(ordersData);
-        const revenue = ordersData.reduce((sum, order) => sum + Number(order.total_price), 0);
+        const revenue = ordersData.reduce((sum, order) => {
+          const price = order.total_price ? Number(order.total_price) : 0;
+          return sum + price;
+        }, 0);
         setTotalRevenue(revenue);
       }
 
-      if (bookingsData) {
+      if (bookingsError) {
+        console.error('Error fetching bookings:', bookingsError);
+      } else if (bookingsData) {
         setBookings(bookingsData);
       }
 
@@ -82,6 +89,8 @@ export const AdminDashboard: React.FC = () => {
         throw error;
       }
       
+      // Add a small delay to ensure the update is processed
+      await new Promise(resolve => setTimeout(resolve, 500));
       fetchData();
       
       // Show success message based on status
@@ -95,9 +104,9 @@ export const AdminDashboard: React.FC = () => {
       setTimeout(() => {
         setStatusMessage(null);
       }, 3000);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error updating order status:', error);
-      setStatusMessage({ type: 'error', text: 'Failed to update order status!' });
+      setStatusMessage({ type: 'error', text: `Failed to update order status: ${error.message || 'Unknown error'}` });
       setTimeout(() => {
         setStatusMessage(null);
       }, 3000);
@@ -105,11 +114,26 @@ export const AdminDashboard: React.FC = () => {
   };
 
   const updateBookingStatus = async (bookingId: string, status: string) => {
-    await supabase
-      .from('bookings')
-      .update({ status })
-      .eq('id', bookingId);
-    fetchData();
+    try {
+      const { error } = await supabase
+        .from('bookings')
+        .update({ status })
+        .eq('id', bookingId);
+      
+      if (error) {
+        throw error;
+      }
+      
+      // Add a small delay to ensure the update is processed
+      await new Promise(resolve => setTimeout(resolve, 500));
+      fetchData();
+    } catch (error: any) {
+      console.error('Error updating booking status:', error);
+      setStatusMessage({ type: 'error', text: `Failed to update booking status: ${error.message || 'Unknown error'}` });
+      setTimeout(() => {
+        setStatusMessage(null);
+      }, 3000);
+    }
   };
 
   return (
@@ -201,7 +225,7 @@ export const AdminDashboard: React.FC = () => {
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-slate-600 text-sm font-medium">Total Revenue</p>
-                    <p className="text-3xl font-bold text-slate-800 mt-2">₹{totalRevenue.toFixed(2)}</p>
+                    <p className="text-3xl font-bold text-slate-800 mt-2">₹{Number(totalRevenue).toFixed(2)}</p>
                   </div>
                   <DollarSign className="w-12 h-12 text-green-500" />
                 </div>
@@ -237,8 +261,8 @@ export const AdminDashboard: React.FC = () => {
                       <div className="flex justify-between items-start">
                         <div>
                           <p className="font-semibold text-slate-800">{order.customer_name}</p>
-                          <p className="text-sm text-slate-600">₹{Number(order.total_price).toFixed(2)}</p>
-                          <p className="text-xs text-slate-500">{new Date(order.order_time).toLocaleString()}</p>
+                          <p className="text-sm text-slate-600">₹{order.total_price ? Number(order.total_price).toFixed(2) : '0.00'}</p>
+                          <p className="text-xs text-slate-500">{order.order_time ? new Date(order.order_time).toLocaleString() : 'N/A'}</p>
                         </div>
                         <span className={`px-3 py-1 rounded-full text-xs font-semibold ${
                           order.status === 'completed' ? 'bg-green-100 text-green-700' :
@@ -296,7 +320,7 @@ export const AdminDashboard: React.FC = () => {
                         Items: {order.items_ordered.map((item: any) => `${item.name} (x${item.quantity})`).join(', ')}
                       </p>
                       <p className="text-sm text-slate-500 mt-1">{new Date(order.order_time).toLocaleString()}</p>
-                      <p className="text-lg font-semibold text-blue-600 mt-2">₹{Number(order.total_price).toFixed(2)}</p>
+                      <p className="text-lg font-semibold text-blue-600 mt-2">₹{order.total_price ? Number(order.total_price).toFixed(2) : '0.00'}</p>
                     </div>
                     <div className="flex gap-2">
                       <button
