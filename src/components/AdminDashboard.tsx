@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { supabase } from '../lib/supabase';
-import { LogOut, UtensilsCrossed, ShoppingCart, Calendar, DollarSign, Plus, Edit2, Trash2 } from 'lucide-react';
+import { LogOut, UtensilsCrossed, ShoppingCart, Calendar, DollarSign, Plus, Edit2, Trash2, Check, AlertCircle } from 'lucide-react';
 import { MenuManagement } from './MenuManagement';
 
 interface Order {
@@ -30,6 +30,7 @@ export const AdminDashboard: React.FC = () => {
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [totalRevenue, setTotalRevenue] = useState(0);
   const [loading, setLoading] = useState(true);
+  const [statusMessage, setStatusMessage] = useState<{type: 'success' | 'error', text: string} | null>(null);
 
   useEffect(() => {
     fetchData();
@@ -71,11 +72,36 @@ export const AdminDashboard: React.FC = () => {
   };
 
   const updateOrderStatus = async (orderId: string, status: string) => {
-    await supabase
-      .from('orders')
-      .update({ status })
-      .eq('id', orderId);
-    fetchData();
+    try {
+      const { error } = await supabase
+        .from('orders')
+        .update({ status })
+        .eq('id', orderId);
+      
+      if (error) {
+        throw error;
+      }
+      
+      fetchData();
+      
+      // Show success message based on status
+      if (status === 'completed') {
+        setStatusMessage({ type: 'success', text: 'Order marked as completed!' });
+      } else if (status === 'cancelled') {
+        setStatusMessage({ type: 'error', text: 'Order marked as cancelled!' });
+      }
+      
+      // Clear message after 3 seconds
+      setTimeout(() => {
+        setStatusMessage(null);
+      }, 3000);
+    } catch (error) {
+      console.error('Error updating order status:', error);
+      setStatusMessage({ type: 'error', text: 'Failed to update order status!' });
+      setTimeout(() => {
+        setStatusMessage(null);
+      }, 3000);
+    }
   };
 
   const updateBookingStatus = async (bookingId: string, status: string) => {
@@ -88,6 +114,22 @@ export const AdminDashboard: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
+      {/* Status message display */}
+      {statusMessage && (
+        <div className={`fixed top-4 right-4 z-50 px-6 py-4 rounded-lg shadow-lg flex items-center gap-3 ${
+          statusMessage.type === 'success' 
+            ? 'bg-green-100 border border-green-300 text-green-700' 
+            : 'bg-red-100 border border-red-300 text-red-700'
+        }`}>
+          {statusMessage.type === 'success' ? (
+            <Check className="w-5 h-5" />
+          ) : (
+            <AlertCircle className="w-5 h-5" />
+          )}
+          <span className="font-semibold">{statusMessage.text}</span>
+        </div>
+      )}
+      
       <nav className="bg-white shadow-lg border-b-4 border-blue-500">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
